@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cores do Brasil — Exposição de artistas brasileiros</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;800&family=Source+Serif+4:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --papel: #F1F3F6;
+    --tinta: #172036;
+    --azul: #1F4FB4;
+    --amarelo: #F2B705;
+    --verde: #0B8F5B;
+    --rosa: #D6336C;
+    --titulo: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+    --texto: "Source Serif 4", Georgia, serif;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body { background: var(--papel); color: var(--tinta); font: 18px/1.6 var(--texto); }
+  a, button { font: inherit; }
+  :focus-visible { outline: 3px solid var(--azul); outline-offset: 3px; }
+
+  header { padding: 64px 24px 40px; max-width: 1100px; margin: 0 auto; }
+  h1 { font: 800 clamp(3rem, 11vw, 7.5rem)/0.95 var(--titulo); letter-spacing: -0.03em; }
+  h1 span:nth-child(1) { color: var(--azul); }
+  h1 span:nth-child(2) { color: var(--verde); }
+  header p { max-width: 52ch; margin-top: 24px; font-size: 1.15rem; }
+
+  main { max-width: 1100px; margin: 0 auto; padding: 0 24px 80px;
+         display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 28px; }
+
+  .obra { background: none; border: 0; padding: 0; text-align: left; cursor: pointer; color: inherit; }
+  .arte { aspect-ratio: 4/5; border-radius: 6px; position: relative; overflow: hidden;
+          transition: transform .25s ease; }
+  .obra:hover .arte { transform: translateY(-6px); }
+  .arte i { position: absolute; display: block; }
+  .obra h2 { font: 800 1.5rem/1.2 var(--titulo); margin-top: 14px; }
+  .obra small { font-size: 1rem; opacity: .75; }
+
+  dialog { border: 0; border-radius: 8px; padding: 0; width: min(680px, 92vw); max-height: 90vh;
+           background: var(--papel); color: var(--tinta); }
+  dialog::backdrop { background: rgba(23, 32, 54, .7); }
+  .faixa { height: 120px; }
+  .conteudo { padding: 28px 32px 32px; overflow: auto; }
+  .conteudo h2 { font: 800 2.2rem/1.1 var(--titulo); }
+  .dados { margin: 8px 0 20px; font-style: italic; opacity: .8; }
+  .conteudo p { max-width: 62ch; }
+  .conteudo p + p { margin-top: 1em; }
+  .fechar { margin-top: 24px; background: var(--tinta); color: #fff; border: 0; border-radius: 4px;
+            padding: 10px 22px; cursor: pointer; font-family: var(--titulo); font-weight: 500; }
+
+  footer { text-align: center; padding: 32px 24px 48px; font-size: .95rem; opacity: .7; }
+  @media (prefers-reduced-motion: reduce) { .arte { transition: none; } }
+</style>
+</head>
+<body>
+
+<header>
+  <h1><span>Cores</span> <span>do Brasil</span></h1>
+  <p>Seis artistas que transformaram a arte brasileira, do modernismo de 1922 à pintura contemporânea. Escolha uma obra para ler a biografia.</p>
+</header>
+
+<main id="galeria" aria-label="Artistas da exposição"></main>
+
+<dialog id="bio" aria-labelledby="bio-nome">
+  <div class="faixa" id="bio-faixa"></div>
+  <div class="conteudo">
+    <h2 id="bio-nome"></h2>
+    <p class="dados" id="bio-dados"></p>
+    <div id="bio-texto"></div>
+    <button class="fechar" id="fechar">Fechar</button>
+  </div>
+</dialog>
+
+<footer>Exposição virtual · Modelo em HTML, CSS e JavaScript. Troque os textos e as cores pelos seus.</footer>
+
+<script>
+  // Para adicionar um artista, copie um bloco abaixo e edite os campos.
+  const artistas = [
+    {
+      nome: "Tarsila do Amaral", anos: "1886–1973", local: "Capivari (SP)", estilo: "Modernismo",
+      cores: ["#1F4FB4", "#F2B705", "#0B8F5B"],
+      bio: [
+        "Nascida no interior de São Paulo, Tarsila estudou em Paris e voltou ao Brasil em 1922, quando se aproximou dos modernistas. Integrou o chamado Grupo dos Cinco, ao lado de Anita Malfatti, Mário de Andrade, Oswald de Andrade e Menotti del Picchia.",
+        "Em 1928 pintou o Abaporu, tela que inspirou o Movimento Antropofágico: a ideia de devorar influências estrangeiras para criar algo genuinamente brasileiro. Suas cores vivas e formas simplificadas tornaram-se marca da identidade visual do país."
+      ]
+    },
+    {
+      nome: "Anita Malfatti", anos: "1889–1964", local: "São Paulo (SP)", estilo: "Expressionismo e Modernismo",
+      cores: ["#D6336C", "#172036", "#F2B705"],
+      bio: [
+        "Estudou na Alemanha e nos Estados Unidos, onde teve contato com o expressionismo e a arte de vanguarda. Ao voltar, apresentou sua obra em São Paulo, em 1917.",
+        "A exposição causou polêmica e recebeu uma crítica dura de Monteiro Lobato, mas reuniu artistas e escritores que depois organizaram a Semana de Arte Moderna de 1922. Por isso, Anita é vista como pioneira do modernismo brasileiro."
+      ]
+    },
+    {
+      nome: "Di Cavalcanti", anos: "1897–1976", local: "Rio de Janeiro (RJ)", estilo: "Modernismo",
+      cores: ["#0B8F5B", "#F2B705", "#D6336C"],
+      bio: [
+        "Começou como caricaturista e ilustrador. Foi um dos idealizadores da Semana de Arte Moderna de 1922, em São Paulo, e fez o desenho do catálogo e do cartaz do evento.",
+        "Sua pintura retrata o povo brasileiro, o samba, o carnaval e as mulheres, com cores quentes e formas generosas. Esse olhar para a vida popular marcou toda a sua carreira."
+      ]
+    },
+    {
+      nome: "Candido Portinari", anos: "1903–1962", local: "Brodowski (SP)", estilo: "Modernismo social",
+      cores: ["#F2B705", "#1F4FB4", "#172036"],
+      bio: [
+        "Filho de imigrantes italianos que trabalhavam em fazendas de café, Portinari levou para a pintura o trabalhador rural e a vida do interior. Tela como Café (1935) estão entre suas obras mais conhecidas.",
+        "Também pintou murais e painéis monumentais. Os painéis Guerra e Paz, de 1956, foram presenteados pelo Brasil à sede da ONU, em Nova York."
+      ]
+    },
+    {
+      nome: "Lygia Clark", anos: "1920–1988", local: "Belo Horizonte (MG)", estilo: "Neoconcretismo",
+      cores: ["#172036", "#F1F3F6", "#1F4FB4"],
+      bio: [
+        "Artista central do movimento neoconcreto, nos anos 1950 e 1960, Lygia abandonou a ideia de obra como objeto para ser apenas contemplado e passou a convidar o público a participar.",
+        "Nas séries Bichos, esculturas de metal articuladas, o espectador manipula as peças e muda sua forma. Mais tarde, suas propostas aproximaram arte e terapia, e ela é hoje referência internacional."
+      ]
+    },
+    {
+      nome: "Beatriz Milhazes", anos: "nascida em 1960", local: "Rio de Janeiro (RJ)", estilo: "Arte contemporânea",
+      cores: ["#D6336C", "#0B8F5B", "#F2B705"],
+      bio: [
+        "Carioca, é uma das artistas brasileiras vivas mais conhecidas no exterior. Suas pinturas reúnem círculos, flores, arabescos e padrões em composições coloridas e rítmicas.",
+        "Seu trabalho dialoga com a natureza tropical, o barroco e a arte moderna brasileira. Também faz colagens, gravuras e trabalhos para espaços públicos."
+      ]
+    }
+  ];
+
+  const galeria = document.getElementById("galeria");
+  const dialogo = document.getElementById("bio");
+
+  // Desenha uma composição abstrata com as cores do artista.
+  function composicao(c, i) {
+    const formas = [
+      `<i style="inset:0;background:${c[0]}"></i>
+       <i style="width:70%;aspect-ratio:1;border-radius:50%;background:${c[1]};left:-10%;top:12%"></i>
+       <i style="width:55%;height:30%;background:${c[2]};right:0;bottom:8%"></i>`,
+      `<i style="inset:0;background:${c[0]}"></i>
+       <i style="width:60%;height:60%;background:${c[1]};right:-8%;top:-6%;border-radius:0 0 0 100%"></i>
+       <i style="width:45%;aspect-ratio:1;border-radius:50%;background:${c[2]};left:10%;bottom:10%"></i>`,
+      `<i style="inset:0;background:${c[0]}"></i>
+       <i style="width:100%;height:38%;background:${c[1]};bottom:0"></i>
+       <i style="width:50%;aspect-ratio:1;border-radius:50%;background:${c[2]};left:25%;top:14%"></i>`
+    ];
+    return formas[i % formas.length];
+  }
+
+  artistas.forEach((a, i) => {
+    const b = document.createElement("button");
+    b.className = "obra";
+    b.innerHTML = `<div class="arte" aria-hidden="true">${composicao(a.cores, i)}</div>
+                   <h2>${a.nome}</h2><small>${a.anos} · ${a.estilo}</small>`;
+    b.addEventListener("click", () => abrir(a));
+    galeria.appendChild(b);
+  });
+
+  function abrir(a) {
+    document.getElementById("bio-nome").textContent = a.nome;
+    document.getElementById("bio-dados").textContent = `${a.anos} · ${a.local} · ${a.estilo}`;
+    document.getElementById("bio-texto").innerHTML = a.bio.map(p => `<p>${p}</p>`).join("");
+    document.getElementById("bio-faixa").style.background =
+      `linear-gradient(90deg, ${a.cores[0]} 40%, ${a.cores[1]} 40% 70%, ${a.cores[2]} 70%)`;
+    dialogo.showModal();
+  }
+
+  document.getElementById("fechar").addEventListener("click", () => dialogo.close());
+  dialogo.addEventListener("click", e => { if (e.target === dialogo) dialogo.close(); });
+</script>
+</body>
+</html>
